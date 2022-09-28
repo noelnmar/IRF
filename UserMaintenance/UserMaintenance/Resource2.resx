@@ -120,4 +120,7 @@
   <data name="Add2" xml:space="preserve">
     <value>Fájlba írás</value>
   </data>
+  <data name="Del" xml:space="preserve">
+    <value>Törlés</value>
+  </data>
 </root>

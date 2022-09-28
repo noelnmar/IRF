@@ -68,5 +68,14 @@ namespace UserMaintenance {
                 return ResourceManager.GetString("Add2", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Törlés.
+        /// </summary>
+        internal static string Del {
+            get {
+                return ResourceManager.GetString("Del", resourceCulture);
+            }
+        }
     }
 }
