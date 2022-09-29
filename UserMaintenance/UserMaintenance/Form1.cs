@@ -18,24 +18,22 @@ namespace UserMaintenance
         public Form1()
         {
             InitializeComponent();
-            label1.Text = Resource1.FullName; // label1
-            //label2.Text = Resource1.FirstName; // label2
-            button1.Text = Resource1.Add; // button1
+            label1.Text = Resource1.FullName;
+
+            button1.Text = Resource1.Add;
+            button2.Text = Resource2.Add2;
+            button3.Text = Resource2.Del;
 
             listBox1.DataSource = users;
             listBox1.ValueMember = "ID";
             listBox1.DisplayMember = "FullName";
-            button2.Text = Resource2.Add2;
-            button3.Text = Resource2.Del;
+
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var u = new User()
-            {
-                FullName = label1.Text,
-                //FirstName = label2.Text
-            };
+            var u = new User();
+            u.FullName = textBox1.Text;
             users.Add(u);
         }
 
@@ -44,7 +42,7 @@ namespace UserMaintenance
             SaveFileDialog sfd = new SaveFileDialog();
 
 
-            // Opcionális rész
+            
             sfd.InitialDirectory = Application.StartupPath; 
             sfd.Filter = "Comma Seperated Values (*.csv)|*.csv"; 
             sfd.DefaultExt = "csv"; 
