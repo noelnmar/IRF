@@ -40,32 +40,18 @@ namespace UserMaintenance
         private void button2_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
-
-
-            
             sfd.InitialDirectory = Application.StartupPath; 
             sfd.Filter = "Comma Seperated Values (*.csv)|*.csv"; 
             sfd.DefaultExt = "csv"; 
             sfd.AddExtension = true; 
 
-            
             if (sfd.ShowDialog() != DialogResult.OK) return;
 
             using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.UTF8))
             {
-                
-                foreach (var s in users)
+                foreach (var u in users)
                 {
-                  
-                    sw.Write(s.FullName);
-                    sw.Write(";");
-                    sw.Write(s.ID);
-                    //sw.Write(";");
-                    //sw.Write(s.BirthDate.ToString());
-                    //sw.Write(";");
-                    //sw.Write(s.AverageGrade.ToString());
-                    //sw.Write(";");
-                    //sw.Write(s.IsActive.ToString());
+                    sw.Write(u.FullName);
                     sw.WriteLine(); 
                 }
             }
@@ -73,11 +59,12 @@ namespace UserMaintenance
 
         private void button3_Click(object sender, EventArgs e)
         {
-            //var törlendő = (from x in User.user
-            //                where x.ReceptID == rid
-            //                select x).FirstOrDefault();
-            //users.Remove(törlendő);
-            //context.SaveChanges();
+            Guid del = ((User)listBox1.SelectedItem).ID;
+            var t = (from u in users
+                     where u.ID == del
+                     select u).FirstOrDefault();
+            users.Remove(t);
+            
         }
     }
 }
