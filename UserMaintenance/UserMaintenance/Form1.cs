@@ -18,56 +18,40 @@ namespace UserMaintenance
         public Form1()
         {
             InitializeComponent();
-            label1.Text = Resource1.FullName; // label1
-            //label2.Text = Resource1.FirstName; // label2
-            button1.Text = Resource1.Add; // button1
+            label1.Text = Resource1.FullName;
+
+            button1.Text = Resource1.Add;
+            button2.Text = Resource2.Add2;
+            button3.Text = Resource2.Del;
 
             listBox1.DataSource = users;
             listBox1.ValueMember = "ID";
             listBox1.DisplayMember = "FullName";
-            button2.Text = Resource2.Add2;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var u = new User()
-            {
-                FullName = label1.Text,
-                //FirstName = label2.Text
-            };
+            var u = new User();
+            u.FullName = textBox1.Text;
             users.Add(u);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = Application.StartupPath;
+            sfd.Filter = "Comma Seperated Values (*.csv)|*.csv";
+            sfd.DefaultExt = "csv";
+            sfd.AddExtension = true;
 
-
-            // Opcionális rész
-            sfd.InitialDirectory = Application.StartupPath; 
-            sfd.Filter = "Comma Seperated Values (*.csv)|*.csv"; 
-            sfd.DefaultExt = "csv"; 
-            sfd.AddExtension = true; 
-
-            
             if (sfd.ShowDialog() != DialogResult.OK) return;
 
             using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.UTF8))
             {
-                
-                foreach (var s in users)
+                foreach (var u in users)
                 {
-                  
-                    sw.Write(s.FullName);
-                    sw.Write(";");
-                    sw.Write(s.ID);
-                    //sw.Write(";");
-                    //sw.Write(s.BirthDate.ToString());
-                    //sw.Write(";");
-                    //sw.Write(s.AverageGrade.ToString());
-                    //sw.Write(";");
-                    //sw.Write(s.IsActive.ToString());
-                    sw.WriteLine(); 
+                    sw.Write(u.FullName);
+                    sw.WriteLine();
                 }
             }
         }
