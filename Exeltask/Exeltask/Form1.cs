@@ -95,17 +95,50 @@ namespace Exeltask
                 values[counter, 1] = f.Vendor;
                 values[counter, 2] = f.Side;
                 values[counter, 3] = f.District;
-                values[counter, 4] = f.Elevator;
+
+                //values[counter, 4] = f.Elevator;
+                if (f.Elevator)
+                {
+                    values[counter, 4] = "Van";
+                }
+                else
+                {
+                    values[counter, 4] = "Nincs";
+                }
                 values[counter, 5] = f.NumberOfRooms;
                 values[counter, 6] = f.FloorArea;
                 values[counter, 7] = f.Price;
-                values[counter, 8] = string.Format("={0}/{1}", GetCell(counter + 2, 7), GetCell(counter + 2, 8));
+                values[counter, 8] = string.Format("=1000000*{1}/{0}", GetCell(counter + 2, 7), GetCell(counter + 2, 8)); 
                 counter++;
             }
 
             xlSheet.get_Range(
             GetCell(2, 1),
              GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
+
+            Excel.Range headerRange = xlSheet.get_Range(GetCell(1, 1), GetCell(1, headers.Length));
+            headerRange.Font.Bold = true;
+            headerRange.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
+            headerRange.HorizontalAlignment = Excel.XlHAlign.xlHAlignCenter;
+            headerRange.EntireColumn.AutoFit();
+            headerRange.RowHeight = 40;
+            headerRange.Interior.Color = Color.LightBlue;
+            headerRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+
+            int lastRowID = xlSheet.UsedRange.Rows.Count;
+
+            Excel.Range contentRange = xlSheet.get_Range(GetCell(2, 1), GetCell(lastRowID, 9));
+            contentRange.BorderAround2(Excel.XlLineStyle.xlContinuous, Excel.XlBorderWeight.xlThick);
+
+            Excel.Range firstcolumnRange = xlSheet.get_Range(GetCell(2, 1), GetCell(lastRowID, 1));
+            firstcolumnRange.Interior.Color = Color.LightYellow;
+            firstcolumnRange.Font.Bold = true;
+
+            Excel.Range lastcolumnRange = xlSheet.get_Range(GetCell(2, 9), GetCell(lastRowID, 9));
+            lastcolumnRange.Interior.Color = Color.LightGreen;
+            lastcolumnRange.NumberFormat = "#,##0.00";
+
         }
 
         private string GetCell(int x, int y)
