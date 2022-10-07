@@ -7,11 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Excel = Microsoft.Office.Interop.Excel;
+using System.Reflection;
 
 namespace Exeltask
 {
+    
     public partial class Form1 : Form
     {
+
         List<Flat> Flats;
         RealEstateEntities context = new RealEstateEntities();
         
@@ -24,5 +28,7 @@ namespace Exeltask
         {
             Flats = context.Flat.ToList();
         }
+
+
     }
 }
