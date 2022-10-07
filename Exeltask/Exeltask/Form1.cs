@@ -99,10 +99,15 @@ namespace Exeltask
                 values[counter, 5] = f.NumberOfRooms;
                 values[counter, 6] = f.FloorArea;
                 values[counter, 7] = f.Price;
-                values[counter, 8] = "";
+                values[counter, 8] = string.Format("={0}/{1}", GetCell(counter + 2, 7), GetCell(counter + 2, 8));
                 counter++;
             }
+
+            xlSheet.get_Range(
+            GetCell(2, 1),
+             GetCell(1 + values.GetLength(0), values.GetLength(1))).Value2 = values;
         }
+
         private string GetCell(int x, int y)
         {
             string ExcelCoordinate = "";
@@ -119,5 +124,7 @@ namespace Exeltask
 
             return ExcelCoordinate;
         }
+
+        
     }
 }
