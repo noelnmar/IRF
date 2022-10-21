@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,67 +12,95 @@ using System.Windows.Forms.DataVisualization.Charting;
 using System.Xml;
 using WebTask.Entities;
 using WebTask.MnbServiceReference;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace WebTask
 {
     public partial class Form1 : Form
     {
         BindingList<RateData> Rates = new BindingList<RateData>();
-        
+        BindingList<string> Currency = new BindingList<string>();
+
         public Form1()
         {
             InitializeComponent();
-            Fuggveny();
-            Fuggveny2();
-            dataGridView1.DataSource = Rates;
-        }
 
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
             
-        }
+            Fuggveny2();
+            RefreshData();
 
-        void Fuggveny()
-        {
-            var mnbService = new MNBArfolyamServiceSoapClient();
+            comboBox1.DataSource = Currency;
+            dataGridView1.DataSource = Rates;
+            
+        
+        var mnbService = new MNBArfolyamServiceSoapClient();
+        var request = new GetCurrenciesRequestBody();
 
-            var request = new GetExchangeRatesRequestBody()
+        var response = mnbService.GetCurrencies(request);
+        var result = response.GetCurrenciesResult;
+
+        var xml = new XmlDocument();
+
+        xml.LoadXml(result);
+
+            foreach (XmlElement item in xml.DocumentElement.ChildNodes[0])
             {
-                currencyNames = "EUR",
-                startDate = "2020-01-01",
-                endDate = "2020-06-30"
-            };
+                string c;
 
-            var response = mnbService.GetExchangeRates(request);
+        var childElement = (XmlElement)item;
+                if (childElement == null)
+                    continue;
 
-            var result = response.GetExchangeRatesResult;
-
-            var xml = new XmlDocument();
-            xml.LoadXml(result);
-
-            foreach (XmlElement element in xml.DocumentElement)
-            {
-                // Létrehozzuk az adatsort és rögtön hozzáadjuk a listához
-                // Mivel ez egy referencia típusú változó, megtehetjük, hogy előbb adjuk a listához és csak később töltjük fel a tulajdonságait
-                var rate = new RateData();
-                Rates.Add(rate);
-
-                // Dátum
-                rate.Date = DateTime.Parse(element.GetAttribute("date"));
-
-                // Valuta
-                var childElement = (XmlElement)element.ChildNodes[0];
-                rate.Currency = childElement.GetAttribute("curr");
-
-                // Érték
-                var unit = decimal.Parse(childElement.GetAttribute("unit"));
-                var value = decimal.Parse(childElement.InnerText);
-                if (unit != 0)
-                    rate.Value = value / unit;
+                c = childElement.InnerText;
+                Currency.Add(c);
             }
+
+    RefreshData();
+}
+
+string GetExchangeRates()
+{
+    var mnbService = new MNBArfolyamServiceSoapClient();
+    var request = new GetExchangeRatesRequestBody()
+    {
+        currencyNames = comboBox1.SelectedItem.ToString(),
+        startDate = dateTimePicker1.Value.ToString(),
+        endDate = dateTimePicker2.Value.ToString()
+    };
+
+    var response = mnbService.GetExchangeRates(request);
+    var result = response.GetExchangeRatesResult;
+
+    return result;
+}
+
+void Xml(string result)
+{
+    var xml = new XmlDocument();
+
+    xml.LoadXml(result);
+
+    foreach (XmlElement item in xml.DocumentElement)
+    {
+        RateData r = new RateData();
+
+        Rates.Add(r);
+
+        var childElement = (XmlElement)item.ChildNodes[0];
+        if (childElement == null)
+            continue;
+
+        r.Date = DateTime.Parse(item.GetAttribute("date"));
+        r.Currency = childElement.GetAttribute("curr");
+        var unit = decimal.Parse(childElement.GetAttribute("unit"));
+        var value = decimal.Parse(childElement.InnerText);
+        if (unit != 0)
+        {
+            r.Value = value / unit;
         }
-         void Fuggveny2()
+    }
+}
+private void Fuggveny2()
         {
 
             chartRateData.DataSource = Rates;
@@ -90,6 +119,30 @@ namespace WebTask
             chartArea.AxisY.MajorGrid.Enabled = false;
             chartArea.AxisY.IsStartedFromZero = false;
 
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void dateTimePicker2_ValueChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            RefreshData();
+        }
+
+        private void RefreshData()
+        {
+            Rates.Clear();
+
+            var result = GetExchangeRates();
+            Xml(result);
+            Fuggveny2();
         }
     }
 }
