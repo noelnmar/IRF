@@ -16,5 +16,15 @@ namespace WebTask
         {
             InitializeComponent();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            Fuggveny();
+        }
+
+        private void Fuggveny()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
