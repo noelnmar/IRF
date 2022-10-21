@@ -58,68 +58,68 @@ namespace WebTask
     RefreshData();
 }
 
-string GetExchangeRates()
-{
-    var mnbService = new MNBArfolyamServiceSoapClient();
-    var request = new GetExchangeRatesRequestBody()
+    string GetExchangeRates()
     {
-        currencyNames = comboBox1.SelectedItem.ToString(),
-        startDate = dateTimePicker1.Value.ToString(),
-        endDate = dateTimePicker2.Value.ToString()
-    };
-
-    var response = mnbService.GetExchangeRates(request);
-    var result = response.GetExchangeRatesResult;
-
-    return result;
-}
-
-void Xml(string result)
-{
-    var xml = new XmlDocument();
-
-    xml.LoadXml(result);
-
-    foreach (XmlElement item in xml.DocumentElement)
-    {
-        RateData r = new RateData();
-
-        Rates.Add(r);
-
-        var childElement = (XmlElement)item.ChildNodes[0];
-        if (childElement == null)
-            continue;
-
-        r.Date = DateTime.Parse(item.GetAttribute("date"));
-        r.Currency = childElement.GetAttribute("curr");
-        var unit = decimal.Parse(childElement.GetAttribute("unit"));
-        var value = decimal.Parse(childElement.InnerText);
-        if (unit != 0)
+        var mnbService = new MNBArfolyamServiceSoapClient();
+        var request = new GetExchangeRatesRequestBody()
         {
-            r.Value = value / unit;
-        }
+            currencyNames = comboBox1.SelectedItem.ToString(),
+            startDate = dateTimePicker1.Value.ToString(),
+            endDate = dateTimePicker2.Value.ToString()
+        };
+
+        var response = mnbService.GetExchangeRates(request);
+        var result = response.GetExchangeRatesResult;
+
+        return result;
     }
-}
-private void Fuggveny2()
+
+        void Xml(string result)
         {
+            var xml = new XmlDocument();
 
-            chartRateData.DataSource = Rates;
+            xml.LoadXml(result);
 
-            var series = chartRateData.Series[0];
-            series.ChartType = SeriesChartType.Line;
-            series.XValueMember = "Date";
-            series.YValueMembers = "Value";
-            series.BorderWidth = 2;
+            foreach (XmlElement item in xml.DocumentElement)
+            {
+                RateData r = new RateData();
 
-            var legend = chartRateData.Legends[0];
-            legend.Enabled = false;
+                Rates.Add(r);
 
-            var chartArea = chartRateData.ChartAreas[0];
-            chartArea.AxisX.MajorGrid.Enabled = false;
-            chartArea.AxisY.MajorGrid.Enabled = false;
-            chartArea.AxisY.IsStartedFromZero = false;
+                var childElement = (XmlElement)item.ChildNodes[0];
+                if (childElement == null)
+                    continue;
 
+                r.Date = DateTime.Parse(item.GetAttribute("date"));
+                r.Currency = childElement.GetAttribute("curr");
+                var unit = decimal.Parse(childElement.GetAttribute("unit"));
+                var value = decimal.Parse(childElement.InnerText);
+                if (unit != 0)
+                {
+                    r.Value = value / unit;
+                }
+            }
         }
+        private void Fuggveny2()
+                {
+
+                    chartRateData.DataSource = Rates;
+
+                    var series = chartRateData.Series[0];
+                    series.ChartType = SeriesChartType.Line;
+                    series.XValueMember = "Date";
+                    series.YValueMembers = "Value";
+                    series.BorderWidth = 2;
+
+                    var legend = chartRateData.Legends[0];
+                    legend.Enabled = false;
+
+                    var chartArea = chartRateData.ChartAreas[0];
+                    chartArea.AxisX.MajorGrid.Enabled = false;
+                    chartArea.AxisY.MajorGrid.Enabled = false;
+                    chartArea.AxisY.IsStartedFromZero = false;
+
+                }
 
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
