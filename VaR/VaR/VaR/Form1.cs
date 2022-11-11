@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,7 @@ namespace VaR
         List<Tick> Ticks;
         List<PortfolioItem> Portfolio = new List<PortfolioItem>();
 
+        List<decimal> nyereségekRendezve;
 
         public Form1()
         {
@@ -66,8 +68,31 @@ namespace VaR
             }
             return value;
         }
-
         
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.InitialDirectory = Application.StartupPath;
+            sfd.Filter = "Comma separetad text (*.csv)|*.csv";
+            sfd.DefaultExt = "csv";
+            sfd.AddExtension = true;
+            if (sfd.ShowDialog() != DialogResult.OK) return;
+            using (StreamWriter sw = new StreamWriter(sfd.FileName, false, Encoding.Default))
+            {
+                int i = 0;
+
+                sw.Write("Időszak;Nyereség");
+
+                foreach (var n in nyereségekRendezve)
+                {
+                    i++;
+                    sw.Write(i);
+                    sw.Write(";");
+                    sw.Write(n);
+                    sw.WriteLine();
+                }
+            }
+        }
     }
 
 }
