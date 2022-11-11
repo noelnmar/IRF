@@ -15,7 +15,9 @@ namespace VaR
     public partial class Form1 : Form
     {
         PortfolioEntities context = new PortfolioEntities();
+
         List<Tick> Ticks;
+
         List<PortfolioItem> Portfolio = new List<PortfolioItem>();
 
         List<decimal> nyereségekRendezve;
@@ -23,9 +25,12 @@ namespace VaR
         public Form1()
         {
             InitializeComponent();
+            
             Ticks = context.Ticks.ToList();
             dataGridView1.DataSource = Ticks;
+            
             CreatePortfolio();
+            
             List<decimal> Nyereségek = new List<decimal>();
             int intervalum = 30;
             DateTime kezdőDátum = (from x in Ticks select x.TradingDay).Min();
@@ -39,7 +44,7 @@ namespace VaR
                 Console.WriteLine(i + " " + ny);
             }
 
-            var nyereségekRendezve = (from x in Nyereségek
+             nyereségekRendezve = (from x in Nyereségek
                                       orderby x
                                       select x)
                                         .ToList();
@@ -81,7 +86,7 @@ namespace VaR
             {
                 int i = 0;
 
-                sw.Write("Időszak;Nyereség");
+                sw.WriteLine("Időszak;Nyereség");
 
                 foreach (var n in nyereségekRendezve)
                 {
