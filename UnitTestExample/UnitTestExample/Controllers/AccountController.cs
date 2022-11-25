@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework;
+using System;
 using System.Activities;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,10 @@ namespace UnitTestExample.Controllers
         public Account Register(string email, string password)
         {
             if(!ValidateEmail(email))
-                throw new ValidationException(
+                throw new AssertionException(
                     "A megadott e-mail cím nem megfelelő!");
-            if(!ValidateEmail(email))
-                throw new ValidationException(
+            if(!ValidatePassword(password))
+                throw new AssertionException(
                     "A megadottt jelszó nem megfelelő!\n" +
                     "A jelszó legalább 8 karakter hosszú kell legyen, csak az angol ABC betűiből és számokból állhat, és tartalmaznia kell legalább egy kisbetűt, egy nagybetűt és egy számot.");
 

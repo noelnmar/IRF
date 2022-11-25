@@ -89,7 +89,9 @@ namespace UnitTestExample.Test
             }
             catch (Exception ex)
             {
-                Assert.IsInstanceOf<ValidationException>(ex);
+                //Assert.IsInstanceOf<System.Activities.ValidationException>(ex);
+                Assert.IsInstanceOf <NUnit.Framework.AssertionException> (ex);
+
             }
 
             // Assert
