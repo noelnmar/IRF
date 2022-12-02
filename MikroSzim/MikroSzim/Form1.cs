@@ -19,7 +19,8 @@ namespace MikroSzim
         List<BirthProbability> BirthProbabilities = new List<BirthProbability>();
         List<DeathProbability> DeathProbabilities = new List<DeathProbability>();
 
-        
+        Random rng = new Random(1234);
+
         public Form1()
         {
             InitializeComponent();
