@@ -42,7 +42,7 @@ namespace EvAlg
             }
             gc.Start();
 
-
+            
 
         }
 
@@ -79,11 +79,13 @@ namespace EvAlg
                           select p;
             if (winners.Count() > 0)
             {
+                button1.Visible = true;
                 winnerBrain = winners.FirstOrDefault().Brain.Clone();
                 gc.GameOver -= Gc_GameOver;
                 return;
-                button1.Visible = true;
+                
             }
+            
         }
 
         private void button1_Click(object sender, EventArgs e)
